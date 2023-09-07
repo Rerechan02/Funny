@@ -332,12 +332,17 @@ sysctl -p
 }
 
 run_xray() {
-wget https://github.com/XTLS/Xray-install/raw/main/install-release.sh
-bash install-release.sh install
-wget https://github.com/dharak36/Xray-core/releases/download/v1.0.0/xray.linux.64bit
-rm /usr/local/bin/xray
-mv xray.linux.64bit /usr/local/bin/xray
+# // VERSION XRAY
+export version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
+
+# // INSTALL CORE XRAY
+cd /usr/local/bin
+bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u www-data --version ${version}
+#wget https://github.com/dharak36/Xray-core/releases/download/v1.0.0/xray.linux.64bit
+#rm /usr/local/bin/xray
+#mv xray.linux.64bit /usr/local/bin/xray
 chmod +x /usr/local/bin/xray
+cd
 }
 
 run_json() {
@@ -2013,7 +2018,24 @@ systemctl enable ntls-109
 systemctl enable ntls-8080
 systemctl enable ntls-69
 systemctl enable nginx
-systemctl disable xray
+systemctl enable xray
+systemctl restart ssh-ws
+systemctl restart vmess-ws-orbit
+systemctl restart vmess-ws-orbit1
+systemctl restart trojan-tcp
+systemctl restart trojan-ws
+systemctl restart trojan-grpc
+systemctl restart vless-ws
+systemctl restart vless-grpc
+systemctl restart vmess-ws
+systemctl restart vmess-grpc
+systemctl restart quota
+systemctl restart ntls
+systemctl restart ntls-109
+systemctl restart ntls-8080
+systemctl restart ntls-69
+systemctl restart nginx
+systemctl restart xray
 }
 
 run_bin() {
